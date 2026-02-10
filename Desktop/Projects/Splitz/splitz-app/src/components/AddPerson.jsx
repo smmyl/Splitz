@@ -4,10 +4,19 @@ export default function AddPerson({ people, onAddPerson }) {
   const [newName, setNewName] = useState('');
 
   const handleSubmit = (e) => {
-    e.preventDefault(); // Prevents page refresh if used inside a form
-    if (newName.trim() && !people.includes(newName.trim())) {
-      onAddPerson(newName.trim());
+    e.preventDefault();
+    
+    // 1. Trim and Clean the input
+    const cleanName = newName.trim();
+    
+    // 2. Auto-capitalize (e.g., 'sam' becomes 'Sam')
+    const formattedName = cleanName.charAt(0).toUpperCase() + cleanName.slice(1).toLowerCase();
+
+    if (formattedName && !people.includes(formattedName)) {
+      onAddPerson(formattedName);
       setNewName('');
+    } else if (people.includes(formattedName)) {
+      alert("This person is already in the group!");
     }
   };
 

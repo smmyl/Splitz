@@ -1,16 +1,35 @@
-import { useState } from 'react';
+// Add useEffect to your imports
+import { useState, useEffect } from 'react';
 
 export default function AddExpense({ people, onAdd }) {
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
-  const [paidBy, setPaidBy] = useState(people[0] || '');
-  const [participants, setParticipants] = useState(people);
+  const [paidBy, setPaidBy] = useState('');
+  const [participants, setParticipants] = useState([]);
+
+  // THIS IS THE KEY: Update defaults when people list changes
+  useEffect(() => {
+    if (people.length > 0) {
+      if (!paidBy) setPaidBy(people[0]);
+      if (participants.length === 0) setParticipants(people);
+    }
+  }, [people]);
 
   const handleSubmit = () => {
-    if (amount > 0 && description && participants.length > 0) {
-      onAdd({ description, amount: parseFloat(amount), paidBy, participants });
+    // Ensure we have a valid paidBy before sending
+    const finalPayer = paidBy || people[0];
+    
+    if (amount > 0 && description && participants.length > 0 && finalPayer) {
+      onAdd({ 
+        description, 
+        amount: parseFloat(amount), 
+        paidBy: finalPayer, 
+        participants 
+      });
       setAmount('');
       setDescription('');
+      // Optional: Reset participants to everyone for the next entry
+      setParticipants(people); 
     }
   };
 
