@@ -1,22 +1,39 @@
+import '../styles/ExpenseHistory.css';
+
 export default function ExpenseHistory({ expenses, onDelete }) {
-    return (
-      <section style={{ marginBottom: '20px', padding: '15px', border: '1px solid #ddd', borderRadius: '12px' }}>
-        <h3>3. Expense History</h3>
-        {expenses.length === 0 ? <p style={{ color: '#888' }}>No expenses yet.</p> : (
-          <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
-            {expenses.map((exp) => (
-              <div key={exp.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid #eee' }}>
-                <div>
-                  <strong>{exp.description}</strong> - ${exp.amount.toFixed(2)}
-                  <div style={{ fontSize: '0.75rem', color: '#666' }}>
-                    Paid by {exp.paidBy} • Split: {exp.participants.join(', ')}
-                  </div>
-                </div>
-                <button onClick={() => onDelete(exp.id)} style={{ color: '#dc3545', border: 'none', background: 'none', cursor: 'pointer' }}>✕</button>
+  return (
+    <section className="history-section">
+      <h3>📜 Recent Activity</h3>
+      
+      {expenses.length === 0 ? (
+        <p style={{ color: '#94a3b8', textAlign: 'center' }}>No expenses yet.</p>
+      ) : (
+        <div className="history-list">
+          {expenses.map((exp) => (
+            <div key={exp.id} className="expense-item">
+              <div className="expense-info">
+                <span className="expense-desc">{exp.description}</span>
+                <span className="expense-meta">
+                  Paid by <strong>{exp.paidBy}</strong> • {exp.participants?.length} split
+                </span>
               </div>
-            ))}
-          </div>
-        )}
-      </section>
-    );
-  }
+              
+              <div className="expense-amount-area">
+                <span className="expense-price">
+                  ${Number(exp.amount).toFixed(2)}
+                </span>
+                <button 
+                  className="delete-btn" 
+                  onClick={() => onDelete(exp.id)}
+                  title="Delete expense"
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
